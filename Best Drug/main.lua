@@ -21,7 +21,7 @@ function love.load()
 
     love.graphics.setDefaultFilter('nearest', 'nearest')
 
-    love.window.setTitle('Drug Fight')
+    love.window.setTitle('Bricks Paddle')
 
     --global variables
     gFonts = {
