@@ -1,5 +1,8 @@
+Class = require 'lib/class'
 push = require 'lib/push'
-require 'lib/class'
+Timer = require 'lib/knife.timer'
+
+require 'conf'
 
 require 'src/Constants'
 
