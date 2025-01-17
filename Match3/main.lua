@@ -11,7 +11,7 @@ function love.load()
         vsync = true
     })
 
-    font = love.graphics.newFont('font/8-bit Arcade In.ttf', 26)
+    font = love.graphics.newFont('font/8-bit Arcade In.ttf', 32)
 
     love.graphics.setFont(font)
 
