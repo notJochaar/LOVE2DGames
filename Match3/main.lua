@@ -15,40 +15,43 @@ function love.load()
 
     love.graphics.setFont(font)
 
-    currentSecond = 0
-    secondTimer = 0
 
-        -- all of the intervals for our labels
-        intervals = {1, 2, 4, 3, 2, 8}
+    -- all of the intervals for our labels
+    --every integer is incerecing by this value 
+    intervals = {1}--, 2, 4, 3, 2, 8}
 
-        -- all of the counters for our labels
-        counters = {0, 0, 0, 0, 0, 0}
+    -- all of the counters for our labels
+    --this stores the integers that are incerecing 
+    counters = {0}--, 0, 0, 0, 0, 0}
+
+    -- create Timer entries for each interval and counter
     
-        -- create Timer entries for each interval and counter
-        for i = 1, 6 do
-            -- anonymous function that gets called every intervals[i], in seconds
-            Timer.every(intervals[i], function()
-                counters[i] = counters[i] + 1
-            end)
-        end
-
+    -- anonymous function that gets called every intervals[i], in seconds
+    Timer.every(intervals[1], function()
+        counters[1] = counters[1] + 1
+    end)
+    
+    --define a block
+    block = {y = VIRTUAL_HEIGHT}
+    
+    Timer.tween(1, {
+        [block] = {y = VIRTUAL_HEIGHT/2}
+    }):finish(function() 
+        Timer.tween(2, {
+            [block] = {y = VIRTUAL_HEIGHT/2}
+        }):finish(function() 
+            Timer.tween(1, {
+                [block] = {y = -50}
+            })
+        end)
+    end)
+        
+    
 end
 
 
 function love.update(dt)
     
-
-    --this will count the real time seconds
-    secondTimer = secondTimer + dt
-
-    --if second Timer is more than 1
-    if secondTimer > 0.5 then
-        --incereace the currentSecond by 1
-        currentSecond = currentSecond + 1 
-
-        --reset secondTimer to 0
-        secondTimer = secondTimer % 0.5
-    end
 
     -- perform the actual updates in the functions we passed in via Timer.every
     Timer.update(dt)
@@ -62,12 +65,22 @@ function love.draw()
     push:start()
     love.graphics.clear(0.8,0.3,.3,1)
     
-    for i = 1, 6 do
+    love.graphics.setColor(1,1,0,1)
+
+    love.graphics.rectangle('fill', 0, block.y, VIRTUAL_WIDTH, 40)
+
+    love.graphics.setColor(0,0,0,1)
+
+    love.graphics.printf('Timer Project', 0, block.y+5, VIRTUAL_WIDTH, 'center') 
+
+    love.graphics.setColor(1,1,1,1)
+
+    --for i = 1, 6 do
         -- reference the counters and intervals table via i here, which is being
         -- updated with the Timer library over time thanks to Timer.update
-        love.graphics.printf('Timer ' .. tostring(counters[i]) .. ' seconds every' ..
-            tostring(intervals[i]) .. ' ', 0, 54 + i * 16, VIRTUAL_WIDTH, 'center')
-    end
+    love.graphics.printf('Timer ' .. tostring(counters[1]) .. ' seconds every' ..
+        tostring(intervals[1]) .. ' ', 0, 54 + 1 * 16, VIRTUAL_WIDTH, 'center')
+    --end
 
     push:finish()
 end
