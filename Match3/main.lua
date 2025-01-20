@@ -15,38 +15,11 @@ function love.load()
 
     love.graphics.setFont(font)
 
+    tileSprite = love.graphics.newImage('graphics/match3.png')    
+    
+    tileQuads = GenerateQuads(tileSprite, 32, 32)
 
-    -- all of the intervals for our labels
-    --every integer is incerecing by this value 
-    intervals = {1}--, 2, 4, 3, 2, 8}
-
-    -- all of the counters for our labels
-    --this stores the integers that are incerecing 
-    counters = {0}--, 0, 0, 0, 0, 0}
-
-    -- create Timer entries for each interval and counter
-    
-    -- anonymous function that gets called every intervals[i], in seconds
-    Timer.every(intervals[1], function()
-        counters[1] = counters[1] + 1
-    end)
-    
-    --define a block
-    block = {y = VIRTUAL_HEIGHT}
-    
-    Timer.tween(1, {
-        [block] = {y = VIRTUAL_HEIGHT/2}
-    }):finish(function() 
-        Timer.tween(2, {
-            [block] = {y = VIRTUAL_HEIGHT/2}
-        }):finish(function() 
-            Timer.tween(1, {
-                [block] = {y = -50}
-            })
-        end)
-    end)
-        
-    
+    board = generateBoard()
 end
 
 
@@ -65,24 +38,39 @@ function love.draw()
     push:start()
     love.graphics.clear(0.8,0.3,.3,1)
     
-    love.graphics.setColor(1,1,0,1)
-
-    love.graphics.rectangle('fill', 0, block.y, VIRTUAL_WIDTH, 40)
-
-    love.graphics.setColor(0,0,0,1)
-
-    love.graphics.printf('Timer Project', 0, block.y+5, VIRTUAL_WIDTH, 'center') 
-
-    love.graphics.setColor(1,1,1,1)
-
-    --for i = 1, 6 do
-        -- reference the counters and intervals table via i here, which is being
-        -- updated with the Timer library over time thanks to Timer.update
-    love.graphics.printf('Timer ' .. tostring(counters[1]) .. ' seconds every' ..
-        tostring(intervals[1]) .. ' ', 0, 54 + 1 * 16, VIRTUAL_WIDTH, 'center')
-    --end
+    drawBoard(128, 16)
 
     push:finish()
+end
+
+function generateBoard()
+    local tiles = {}
+
+        for y = 1,8 do
+            table.insert(tiles,{})
+
+            for x = 1, 8 do
+                table.insert(tiles[y], {
+                    x = (x - 1) * 32,
+                    y = (y - 1) * 32,
+
+                    tile = math.random(#tileQuads)
+                })
+            end
+        end
+
+    return tiles
+end
+
+function drawBoard(offsetX, offsetY)
+    for y = 1 , 8 do
+        for x = 1, 8 do
+            local tile = board[y][x]
+
+            love.graphics.draw(tileSprite, tileQuads[tile.tile], 
+                tile.x + offsetX, tile.y + offsetY)
+        end
+    end
 end
 
 function love.resize(w, h)
