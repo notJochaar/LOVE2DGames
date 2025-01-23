@@ -20,6 +20,10 @@ function love.load()
     tileQuads = GenerateQuads(tileSprite, 32, 32)
 
     board = generateBoard()
+
+    highlightedTile = false
+    highlightedX, highlightedY = 1, 1
+    selectedTile = board[1][1]
 end
 
 
@@ -32,6 +36,34 @@ function love.update(dt)
     
 end
 
+function love.keypressed(key) 
+    if key == 'escape' then
+        love.event.quit()
+    end
+
+    local x, y = selectedTile.gridX, selectedTile.gridY
+
+    if key == 'up' then
+        if y > 1 then
+            selectedTile = board[y - 1][x]
+        end
+    end
+    if key == 'down' then
+        if y < 8 then
+            selectedTile = board[y + 1][x]
+        end
+    end
+    if key == 'left' then
+        if x > 1 then
+            selectedTile = board[y][x - 1]
+        end
+    end
+    if key == 'right' then
+        if x < 8 then
+            selectedTile = board[y][x + 1]
+        end
+    end
+end
 
 
 function love.draw()
@@ -54,6 +86,10 @@ function generateBoard()
                     x = (x - 1) * 32,
                     y = (y - 1) * 32,
 
+                    -- now we need to know what tile X and Y this tile is
+                    gridX = x,
+                    gridY = y,
+                    
                     tile = math.random(#tileQuads)
                 })
             end
@@ -69,9 +105,43 @@ function drawBoard(offsetX, offsetY)
 
             love.graphics.draw(tileSprite, tileQuads[tile.tile], 
                 tile.x + offsetX, tile.y + offsetY)
+
+                -- draw highlight on tile if selected
+            if highlightedTile then
+                if tile.gridX == highlightedX and tile.gridY == highlightedY then
+                    
+                    -- half opacity so we can still see tile underneath
+                    love.graphics.setColor(1, 1, 1, 128/255)
+
+                    -- rounded rectangle with the 4 at the end (corner segments)
+                    love.graphics.rectangle('fill', tile.x + offsetX, tile.y + offsetY, 32, 32, 4)
+
+                    -- reset color back to default
+                    love.graphics.setColor(1, 1, 1, 1)
+                end
+            end
         end
     end
+
+    -- drawing currently selected tile:
+    
+    
+    -- thicker line width than normal
+    
+    love.graphics.setColor(1, 1, 1, 0.1)
+    
+    love.graphics.rectangle('fill', selectedTile.x + offsetX, selectedTile.y + offsetY, 32, 32, 4)
+
+    love.graphics.setLineWidth(2)
+    
+    love.graphics.setColor(1, 1, 1, 234/255)
+    -- line rect where tile is
+    love.graphics.rectangle('line', selectedTile.x + offsetX, selectedTile.y + offsetY, 32, 32, 4)
+
+    -- reset default color
+    -- love.graphics.setColor(1, 1, 1, 1)
 end
+
 
 function love.resize(w, h)
     push:resize(w,h)
