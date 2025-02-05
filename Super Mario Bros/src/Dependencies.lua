@@ -5,6 +5,7 @@ require 'conf'
 
 
 require 'src/constants'
+require 'src/Util'
 
 
 --controls the states
@@ -23,9 +24,13 @@ gFont = {
 
 gTextures = {
     ['background'] = love.graphics.newImage('assets/graphics/background1.png'),
-    ['tileset'] = love.graphics.newImage('assets/graphics/tileset1.png')
+    ['tilesheet'] = love.graphics.newImage('assets/graphics/tileset1.png')
 }
 
 gSounds = {
     ['groundSoundTrack'] = love.audio.newSource('assets/sound/01. Ground Theme.mp3', 'static')
+}
+
+gFrames = {
+    ['tileset'] = GenerateQuads(gTextures['tilesheet'], TILE_SIZE, TILE_SIZE)
 }
