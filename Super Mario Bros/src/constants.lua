@@ -8,3 +8,6 @@ VIRTUAL_HEIGHT = 240
 
 --Tiles
 TILE_SIZE = 16
+--Tile IDs
+SKY = 10
+GROUND = 1

@@ -11,7 +11,7 @@ function love.load()
 
     push:setupScreen(VIRTUAL_WIDTH, VIRTUAL_HEIGHT, WINDOW_WIDTH, WINDOW_HEIGHT,{
         fullscreen = false,
-        resizable = false,
+        resizable = true,
         vsync = true
     })
 
@@ -21,10 +21,47 @@ function love.load()
     gSounds['groundSoundTrack']:play()
     
     love.graphics.setFont(gFont['mario'])
+
+    tiles = {
+        
+    }
+
+    counter = 1
+
+    mapWidth = 30
+    mapHeight = 15
+
+
+    for y = 1, mapHeight do
+
+        --insert a blank table into our main table
+        table.insert(tiles, {})
+        
+            
+        for x = 1, mapWidth do
+            --this will insert data inside the first object in the table
+            table.insert(tiles[y], {
+                id = y < 12 and SKY or GROUND
+            })
+            --[[
+                -the result of this loop will be
+                -the y loop will insert an object to the table,
+                -the x loop will insert some values to an object
+
+                tiles{
+                    {id = SKY, id = SKY},
+                    {id = SKY, id = SKY}
+                }
+
+            ]]--
+            
+        end
+    end
+
 end
 
 function love.update(dt)
-
+    
 end
 
 function love.draw()
@@ -35,19 +72,18 @@ function love.draw()
     
     love.graphics.draw(gTextures['background'], 0,0)
 
-    love.graphics.draw(gTextures['tilesheet'], 0,0)
+    for y = 1, mapHeight do
+        for x = 1, mapWidth do
 
-    local marginX = 0
-    local marginY = 0
-    for y = 0, (VIRTUAL_HEIGHT/ TILE_SIZE) do
-        for x = 0, (VIRTUAL_WIDTH / TILE_SIZE) do
-            love.graphics.draw(gTextures['tilesheet'],gFrames['tileset'][1], marginX , gTextures['background']:getHeight() + marginY)
+            --this will get the id of the tile
+            local tile = tiles[y][x]
 
-            marginX = marginX + TILE_SIZE
+            love.graphics.draw(gTextures['tilesheet'], gFrames['tileset'][tile.id], (x-1) * TILE_SIZE, (y-1) * TILE_SIZE)
+
         end
-        marginY = marginY + TILE_SIZE
-        marginX = 0
     end
+
+
     love.graphics.setColor(1,0.8,0,1)
     
     love.graphics.printf('Super Mario Bros', 0, VIRTUAL_HEIGHT/2 - 40, VIRTUAL_WIDTH, 'center')
@@ -56,5 +92,5 @@ function love.draw()
 end
 
 function love.resize(w,h)
-    push.resize(w,h)
+    push:resize(w,h)
 end
